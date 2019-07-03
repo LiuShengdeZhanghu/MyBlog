@@ -1,0 +1,44 @@
+{% extends "base2.html" %}
+{% load staticfiles %}
+{% block title %}
+    我的网站|个人资料
+{% endblock %}
+{% block nac_login_active %}active{% endblock %}
+{% block header_extend %}
+    <link rel="stylesheet" href="/static/css/login.css">
+    <link rel="stylesheet" href="/static/css/user_info.css">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row user-info-content">
+{#            <div class="col-xs-10 col-xs-offset-1"></div>#}
+            {% if user.is_authenticated %}
+                <h2 style="color: #a6e1ec">{{ user.username }}</h2>
+                <hr>
+                <ul style="font-size: medium;line-height: 2em">
+{#                    动态绑定的一个函数#}
+                    <li>昵称：{{ user.get_nickname }}&nbsp;&nbsp;&nbsp;<a href="{% url 'change_nickname' %}?from={{ request.get_full_path }}">修改昵称</a></li>
+                    <li>
+                        邮箱：
+                        {% if user.email %}
+                            {{ user.email }}
+                        {% else %}
+                            没有填写  <a href="{% url 'bind_email' %}?from={{ request.get_full_path }}">去绑定</a>
+                        {% endif %}
+                    </li>
+                    <li>
+                        上一次登录时间：
+                        {{ user.last_login|date:"Y-m-d H:i:s" }}
+                    </li>
+                    <li><a href="{% url 'change_password' %}">修改密码</a></li>
+                </ul>
+            {% else %}
+                <span>未登录，跳转到首页....</span>
+                <script>
+                    window.location.href='/';
+                </script>
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}

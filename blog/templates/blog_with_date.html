@@ -1,0 +1,8 @@
+{% extends "article_list.html" %}
+{% block title %}
+    {{ blog_type.type_name }}
+{% endblock %}
+{% block nac_blog_active %}active{% endblock %}
+{% block naa_blog_active %}active{% endblock %}
+
+{% block blog_list_title %}时间为：{{ blog_with_date }}的博文 （共有{{ page_of_blogs.paginator.count }}篇博客）{% endblock %}

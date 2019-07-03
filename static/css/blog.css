@@ -1,0 +1,97 @@
+ul.blog-type{
+    list-style-type:none;
+}
+div.blog.h3{
+    margin-top: 0.5em;
+}
+div.blog{
+    border-bottom: 1px solid #a49494;
+    margin-bottom: 2em;
+    padding-bottom: 0.8em;
+}
+div.blog p.blog-info{
+    margin-bottom: 0;
+}
+div.blog-content{
+    text-indent: 2em;
+    font-size: 16px;
+    line-height: 1.8em;
+}
+div.content{
+    padding-top: 90px;
+}
+div.comment-area{
+    margin-top: 2em;
+
+}
+h3.comment-title{
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.4em;
+}
+div.comment_line{
+    border-bottom: 1px dashed #ccc;
+    padding-left: 1em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-bottom: 0.5em;
+}
+div.reply{
+    margin-left: 3%;
+}
+
+div.django-ckeditor-widget{
+    width: 100%;
+}
+div#reply_content_container{
+    display: none;
+    border: 1px solid #d1d1d1;
+    background-color: #f8f8f8;
+    border-bottom: none;
+    overflow: hidden;
+    padding: 1em 1em 0.5em;
+}
+p#reply_user_name{
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 0.5em;
+}
+.blog-info{
+    padding-bottom: 1em;
+}
+.like{
+    display:inline;
+    font-size: 17px;
+}
+.like .active{
+    color: #f22;
+}
+span.dianzan{
+    font-size: 20px;
+    padding-right: 0.3em;
+}
+span.dianzan:hover{
+    cursor: pointer;
+}
+#comment_list p{
+    display: inline;
+}
+.my-modal-body-set{
+    margin-bottom: 0.3em;
+}
+.my-modal-a{
+    position: relative;
+    top:0.3em;
+}
+
+.blog-all-content{
+    background: #ccc;
+    padding-top: 2em;
+}
+.comment_text{
+    margin-bottom: 0.7em;
+    margin-top: 0.7em;
+    font-size: 15px;
+}
+.comment-list-div{
+    margin-bottom: 2em;
+    font-size: 15px;
+}

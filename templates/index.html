@@ -1,0 +1,134 @@
+{% extends "base2.html" %}
+{% load staticfiles %}
+{% block title %}
+    我的网站|首页
+{% endblock %}
+{% block header_extend %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script src="http://cdn.highcharts.com.cn/highcharts/highcharts.js"></script>
+    <script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+{% endblock %}
+{% block nac_home_active %}active{% endblock %}
+{% block naa_home_active %}active{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="hot-blog">
+                <!--今天24小时内的热门博客-->
+{#                    <div class="list-group">#}
+{#                        <a href="#" class="list-group-item active">#}
+{#                            今天热门博客#}
+{#                        </a>#}
+{#                        {% for hot_data in today_hot_data %}#}
+{#                                <a href="/article/{{ hot_data.content_object.pk }}" class="list-group-item">#}
+{#                                <span class="badge">{{ hot_data.read_num }}</span> {{ hot_data.content_object|slice:"8:" }}#}
+{#                                </a>#}
+{#                        {% empty %}#}
+{#                            <a class="list-group-item">今天暂时没有热门博客</a>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+{##}
+{#                    <div class="list-group">#}
+{#                        <a href="#" class="list-group-item active">#}
+{#                            近七天热门博客#}
+{#                        </a>#}
+{#                        {% for hot_data in hot_data_for_7_days %}#}
+            {#                <li><a href="/article/{{ hot_data.object_id }}">{{ hot_data.blog_title }}</a>：{{ hot_data.read_num_sum }}</li>#}
+{##}
+{#                                <a href="/article/{{ hot_data.id }}" class="list-group-item">#}
+{#                                    <span class="badge">{{ hot_data.read_num_sum }}</span>{{ hot_data.title }}#}
+{#                                </a>#}
+{#                        {% empty %}#}
+{#                            <a class="list-group-item">近七天没有热门博客</a>#}
+{#                        {% endfor %}#}
+{#                     </div>#}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h2 class="home_content">欢迎来到我的博客网站，随便看</h2>
+                <!-- 图表容器 DOM -->
+                <div id="container" class="container-fluid" style="opacity: 0.7;"></div>
+            </div>
+            <div class="col-md-3">
+                <div class="hot-blog center-block">
+                <!--今天24小时内的热门博客-->
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active">
+                            今天热门博客
+                        </a>
+                        {% for hot_data in today_hot_data %}
+                                <a href="/article/{{ hot_data.id }}" class="list-group-item">
+                                <span class="badge">{{ hot_data.read_num_sum }}</span> {{ hot_data.title }}
+                                </a>
+                        {% empty %}
+                            <a class="list-group-item">今天暂时没有热门博客</a>
+                        {% endfor %}
+                    </div>
+
+                    <div class="list-group">
+                        <a href="#" class="list-group-item active">
+                            近七天热门博客
+                        </a>
+                        {% for hot_data in hot_data_for_7_days %}
+            {#                <li><a href="/article/{{ hot_data.object_id }}">content_object|slice:"8:"{{ hot_data.blog_title }}</a>：{{ hot_data.read_num_sum }}</li>#}
+
+                                <a href="/article/{{ hot_data.id }}" class="list-group-item">
+                                    <span class="badge">{{ hot_data.read_num_sum }}</span>{{ hot_data.title }}
+                                </a>
+                        {% empty %}
+                            <a class="list-group-item">近七天没有热门博客</a>
+                        {% endfor %}
+                     </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // 图表配置
+            var options = {
+                chart: {
+                    type: 'line'                          //指定图表的类型，默认是折线图（line）
+                },
+                title: {
+                    text: '近七天博客访问量'                 // 标题
+                },
+                xAxis: {
+                    categories: {{ dates|safe }},   // x 轴分类
+                    tickmarkPlacement: 'on'
+                },
+                yAxis: {
+                    title: {text: null },               // y 轴标题
+                    labels: {enabled : false},           //屏蔽掉y轴数据
+                    gridLineDashStyle : 'Dash'
+                },
+                series: [{                              // 数据列
+                    name: '访问量',                        // 数据列名
+                    data: {{ read_nums }}                     // 数据
+                }],
+
+                credits: { enabled: false },  //隐藏highcharts的站点标志
+                lang: {
+                    contextButtonTitle: "图表导出菜单",
+                    decimalPoint: ".",
+                    downloadJPEG: "下载JPEG图片",
+                    downloadPDF: "下载PDF文件",
+                    downloadPNG: "下载PNG文件",
+                    downloadSVG: "下载SVG文件",
+                    printChart:"打印图表"
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                }
+                //legend: {enabled:false}                  //屏蔽掉图例
+            };
+            // 图表初始化函数
+            var chart = Highcharts.chart('container', options);
+        </script>
+    </div>
+
+{% endblock %}

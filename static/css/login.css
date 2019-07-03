@@ -1,0 +1,26 @@
+/*垂直居中*/
+.container{
+    display:table;
+    height:100%;
+}
+.row{
+    display: table-cell;
+    vertical-align: middle;
+}
+.row-centered {
+    text-align:center;
+}
+
+.col-centered {
+    display:inline-block;
+    float:none;
+    text-align:left;
+    margin-right:-4px;
+}
+
+div.lo-re-content{
+    margin-top: 5%;
+}
+.forgot-a{
+    padding-top: 4em;
+}

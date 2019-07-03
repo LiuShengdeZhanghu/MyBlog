@@ -1,0 +1,165 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{#    与响应式布局有关#}
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/bootstrap-3.3.7/css/bootstrap.min.css">
+    <link rel="icon" href="https://v3.bootcss.com/favicon.ic">
+    <link rel="stylesheet" href="/static/css/blog_new.css">
+
+{#    新增加的#}
+    <link rel="stylesheet" type="text/css" href="/static/css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/demo.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/component.css" />
+
+    <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="/static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    {% block header_extend %}{% endblock %}
+</head>
+<body>
+
+    <div class="demo-1">
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            {#    navbar-fixed-top让导航条保持在顶部#}
+            <div class="container-fluid">
+
+                <div class="navbar-header">
+                <a class="navbar-brand" href="{% url "index" %}">个人博客网站</a>
+                <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                </div>
+
+                <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                <nav class="blog-nav">
+                    <ul class="nav navbar-nav nav-pills nav-font-size">
+
+                        <li class="{% block nac_home_active %}{% endblock %}">
+                            <a class="blog-nav-item {% block naa_home_active %}{% endblock %}" href="{% url "index" %}">首页</a></li>
+                        <li class="{% block nac_blog_active %}{% endblock %}">
+                            <a class="blog-nav-item {% block naa_blog_active %}{% endblock %}" href="{% url "article_list" %}">博客</a></li>
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                              功能 <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                              <li>分类</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right my-nav-right nav-font-size">
+                        {% if not user.is_authenticated %}
+                            <li class="{% block nac_login_active %}{% endblock %}"><a href="{% url 'blog_login' %}?from={{ request.get_full_path }}"><span class="glyphicon glyphicon-user"></span> 登录</a></li>
+                            <li class="{% block nac_register_active %}{% endblock %}"><a href="{% url 'blog_register' %}?from={{ request.get_full_path }}"><span class="glyphicon glyphicon-log-in"></span> 注册</a></li>
+                        {% else %}
+                            <li role="presentation" class="dropdown">
+                                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                  {{ user.username }}<span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/user/user_info/">个人中心</a></li>
+                                    {% if user.is_staff or user.is_superuser %}
+                                        <li><a href="{% url 'xadmin:index' %}">后台管理</a></li>
+                                    {% endif %}
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{% url 'logout' %}?from={{ request.get_full_path }}">退出登录</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    <form class="navbar-form navbar-right" action="/article/searchblog/" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input name="keyword" type="text" class="form-control" placeholder="博客搜索">
+                        </div>
+                        <button type="submit" class="btn btn-default">查询</button>
+                    </form>
+                </nav>
+                </div>
+
+            </div>
+        </div>
+
+{#        主要内容#}
+        <div class="content">
+        {% block content %}{% endblock %}
+        {% block script_extends %}{% endblock %}
+        </div>
+
+{#        背景#}
+        <div class="content2" style="position:fixed;">
+            <div id="large-header" class="large-header">
+                <canvas id="demo-canvas"></canvas>
+            </div>
+
+        </div>
+    </div>
+    <script src="/static/js/TweenLite.min.js"></script>
+    <script src="/static/js/EasePack.min.js"></script>
+    <script src="/static/js/rAF.js"></script>
+    <script src="/static/js/demo-1.js"></script>
+    {% block model %}
+        <div class="modal fade" id="login_or_register_model" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog my-modal-set" role="document" style="top: 40%;transform: translateY(-50%);">
+                <div class="modal-content">
+                    <form id="login_modal_form" action="" method="post" onsubmit="return medal_login()">
+                        <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">登录</h4>
+                        </div>
+                        <div class="modal-body my-modal-body-set">
+
+                        {% csrf_token %}
+        {#                在user中设置，通过setting文件加载到公共模板中#}
+                        {% for field in login_model_form %}
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+        {#                    <p class="text-danger">{{ field.errors.as_text }}</p>#}
+                        {% endfor %}
+                        <span id="login_model_tip" class="pull-left text-danger"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" value="登录" class="btn btn-success btn-block pull-right">
+                            <div><a href="/user/register?from={{ request.get_full_path }}" class="my-modal-a">还没有账号，去注册一个</a></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function medal_login() {
+                $.ajax({
+                    url:"/user/login_for_medal",
+                    type:"POST",
+                    data:$("#login_modal_form").serialize(),
+                    cache:false,
+                    success:function (ret) {
+                        if(ret["status"] == "SUCCESS"){
+                            // 登录成功这个窗口进行重新加载
+                            window.location.reload();
+                        }else {
+                            $("#login_model_tip").text("用户名或者密码不正确");
+                        }
+                    }
+                });
+                return false;
+            }
+        </script>
+    {% endblock %}
+
+{#    <footer class="blog-footer my-footer" style="padding: 20px;">#}
+{#      <p>Blog template built for <a href="http://getbootstrap.com">Bootstrap</a> by <a href="https://twitter.com/mdo">@liusheng</a>.</p>#}
+{#      <p>#}
+{#        <a href="#">Back to top</a>#}
+{#      </p>#}
+{#    </footer>#}
+</body>
+</html>

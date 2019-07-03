@@ -1,0 +1,97 @@
+{% extends "base2.html" %}
+{% load staticfiles %}
+{% block title %}
+    我的网站|注册
+{% endblock %}
+{% block nac_register_active %}active{% endblock %}
+{% block header_extend %}
+{#    <link rel="stylesheet" href="/static/css/login.css">#}
+    <link rel="stylesheet" href="/static/css/form.css">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row row-centered">
+            <div class="col-md-3"></div>
+            <div class="col-xs-14 col-md-6 col-centered my-shiying-iphone">
+            {% if not user.is_authenticated %}
+                <div class="panel panel-default my-set-panel">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">注册</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {% for field in reg_form %}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {{ field }}
+                                <p class="text-danger">{{ field.errors.as_text }}</p>
+                            {% endfor %}
+                            <span id="error_tip" class="pull-left text-danger error-span">{{ login_form.non_field_errors }}</span>
+                            <div>
+                                <button id="send_code" class="btn btn-info btn-sm send-email-btn">发送验证码</button>
+                            </div>
+                            <input type="submit" value="注册" class="btn btn-success btn-block pull-right">
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <span>已登录，跳转到首页....</span>
+                <script>
+                    window.location.href='/';
+                </script>
+            {% endif %}
+            </div>
+            <div class="col-md-3"></div>
+        </div>
+    </div>
+{% endblock %}
+{% block script_extends %}
+    <script type="text/javascript">
+        $('#send_code').click(function () {
+            var email = $('#id_email').val();
+            var myreg = /^([\.a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/;
+            if(!myreg.test(email)){
+                $("#error_tip").text("*邮箱格式错误");
+                return false;
+            }
+            if(email == ''){
+                $("#error_tip").text("*邮箱不能为空");
+                return false;
+            }
+            $("#error_tip").text("");
+            $.ajax({
+                url:'{% url 'bind_email_code' %}',
+                type:'GET',
+                data:{
+                    'email':email,
+                    'sendfor':'register_code'
+                },
+                cache:false,
+                success:function (ret) {
+                    if(ret.status=='ERROR'){
+                        $("#error_tip").text(ret.info);
+                    }
+                },
+                error:function (ret) {
+                    $("#error_tip").text("请求失败，请重试");
+                }
+            });
+            // 把按钮变为不可点击
+            $(this).addClass('disabled');
+            $(this).attr('disabled',true);
+            var time = 30;
+            $(this).text(time+'s');
+            var interval = setInterval(() => {
+                if(time <= 0){
+                    clearInterval();
+                    $(this).removeClass('disabled');
+                    $(this).attr('disabled',false);
+                    $(this).text('发送验证码');
+                    return false;
+                }
+                time --;
+                $(this).text(time+'s');
+            },1000);
+        })
+    </script>
+{% endblock %}

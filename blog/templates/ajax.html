@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajax</title>
+</head>
+<body>
+<input id="name" type="text"/>
+<input type="button" value="点击发起ajax请求" onclick="doajax()"/>
+<p id="show_data"></p>
+<script src="{% static "js/jquery-3.3.1.min.js" %}"></script>
+<script src="{% static "js/jquery-3.3.1.js" %}"></script>
+<script type="text/javascript">
+    function doajax() {
+        var temp = $('#name').val();
+        $.ajax(
+            {
+                url:"http://127.0.0.1:8000/talk/",
+                type:"POST",
+                data:{data:temp},
+                success:function (org) {
+                    var word=org.word;
+                    alert(word);
+                },
+                error:function () {
+                    alert("失败");
+                }
+            }
+        )
+    }
+</script>
+</body>
+</html>

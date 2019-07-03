@@ -1,0 +1,21 @@
+h2.home_content{
+    text-align: center;
+    margin-top: 3em;
+    margin-bottom: 2em;
+}
+
+div#container{
+    margin: 0 auto;
+    height: 27em;
+    min-width: 20em;
+    border: 1px #ffffff;
+    border-radius: 5px;
+    /*max-width: 50em;*/
+}
+div.hot-blog{
+    margin-top: 10em;
+    width: 15em;
+}
+h2{
+    color: #ffffff;
+}
